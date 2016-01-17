@@ -35,7 +35,7 @@ wildgeese.addRule([
 ## API
 
 ### validateFunction
-Wildgeese give the below arguments to validate function.
+Wildgeese give the below two arguments to validate function.
 - `value` : any  
   validation target value
 
@@ -45,7 +45,9 @@ Wildgeese give the below arguments to validate function.
     validation options.
   - `label` : String  
     Human readable field name.
-  - `fields` : Object  
+  - `labels` : Object
+    Human readable other field labels.
+  - `values` : Object  
     other field values.
   - `options` : Object  
     User defined options (see `Wildgeese#get`)
@@ -110,5 +112,5 @@ Wildgeese give the below arguments to validate function.
   get `fieldName` field definition.
 
 
-- **validate**(values: Object, requiredAllFields : Boolean = true) : Promise  
+- **validate**(values: Object) : Promise  
   validate fields of `values`.
