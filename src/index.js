@@ -14,9 +14,11 @@ export default class Wildgeese {
      * @method is
      * @param {Any} value                       validation target value
      * @param {Array<String|Function>} rules    checking rule name or validator function
+     * @return {Promise<Array<String> | undefined}  resolve Error messages when `value` has error. undefined otherwise.
      */
     static is(value, rules) {
-
+        const w = new Wildgeese();
+        return w.is(value, rules);
     }
 
     /**
