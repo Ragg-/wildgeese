@@ -108,6 +108,9 @@ export async function validateValue(value, rules, wildgeese, ctx = {}) {
     // clone rules
     rules = _.cloneDeep(rules);
 
+    // bind i18n
+    const i18n = wildgeese.i18n.__.bind(wildgeese.i18n);
+
     const results = await Promise.all(rules.map(function(rule) {
         return new Promise(async (resolve, reject) => {
             await nextTick();
@@ -136,6 +139,7 @@ export async function validateValue(value, rules, wildgeese, ctx = {}) {
                 // validate
                 const givenCtx = {
                     args,
+                    __ : i18n,
                     label : ctx.label,
                     labels : ctx.labels,
                     options: wildgeese.get(),

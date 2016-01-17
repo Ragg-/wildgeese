@@ -162,3 +162,67 @@ validator function given the below two arguments and must be return `errorMessag
 
 - **validate**(values: Object) : Promise  
   validate fields of `values`.
+
+## Built-in rules(and arguments)
+`{}` wrapped arguments, must be pass a Object.  
+`[]` wrapped arguments is optional.
+
+``` javascript
+// case of `alphaOnly` rule
+fields.add("alpha", "Alpha", [ "alpha" /* or ["alpha"] */ ]);
+
+// case of `afterDateOf` rule
+fields.add("date", "Date", [ ["afterDateOf", new Date()] ]); // pass Date object
+
+// case of `float` rule
+fields.add("float", "Float", [ ["float", {min: 0.0, max: 1.0}] ]); // pass an Object
+```
+
+- `required`
+- `equalsWith`, targetFieldName : String
+
+below, import from [node-validator](https://www.npmjs.com/package/validator)
+- `contains`, seed: String
+- `equals`, comparison: String
+- `afterDateOf`[, criteria: Date] - `Date` defaults to now.
+- `alphaOnly`
+- `alphaNumericOnly`
+- `asciiOnly`
+- `base64`
+- `beforeDateOf`[, criteria: Date] - `Date` defaults to now.
+- `boolean`
+- `byteLength`, {`min`: Number[, `max`: Number]}
+- `creditCard`
+- `currency`, {options} - (see [node-validator#isCurrency](https://www.npmjs.com/package/validator))
+- `date`
+- `decimal`
+- `divisibleBy`, Number
+- `email`, {options} - (see [node-validator#isEmail](https://www.npmjs.com/package/validator))
+- `fqdn`, [{options}] - (see [node-validator#isFQDN](https://www.npmjs.com/package/validator))
+- `float`, [{`min`: Float, `max`: Float}]
+- `fullWidth`
+- `halfWidth`
+- `hexColor`
+- `hexadecimal`
+- `ip`[, version: Number] - (see [node-validator#isIP](https://www.npmjs.com/package/validator))
+- `ISBN`[, version: Number]
+- `ISIN`
+- `ISO8601`
+- `in`, acceptValues: Array
+- `int`[, {`min`: Number, `max`: Number}]
+- `json`
+- `length`[, {`min`: Number, `max`: Number}]
+- `lowercase`
+- `macAddress`
+- `mobilePhone`, locale : String - (see [node-validator#isMobilePhone](https://www.npmjs.com/package/validator))
+- `mongoId`
+- `multibyte`
+- `null`
+- `numeric`
+- `surrogatePair`
+- `url`
+- `uuid`[, version: Number]
+- `uppercase`
+- `variableWidth`
+- `whiteListed`, chars: String
+- `matches`, pattern: RegExp

@@ -1,6 +1,7 @@
 import _ from "lodash";
 import co from "co";
 import objectCreate from "./object-create";
+import i18nInitial from "./i18n-initial";
 import FieldSet from "./field-set";
 import {validateValue} from "./validate";
 import defaultRules from "./default-rules";
@@ -24,8 +25,10 @@ export default class Wildgeese {
     /**
      * @constructor
      * @class Wildgeese
+     * @param {I18n2} i18n=i18n2  an i18n-2 instance
      */
-    constructor() {
+    constructor(i18n2 = null) {
+        this.i18n = i18n2 || i18nInitial();
         this._config = {};
         this._validators = objectCreate();
         this.addRule(defaultRules);
