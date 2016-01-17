@@ -105,9 +105,4 @@ export default class Wildgeese {
     makeFieldSet() {
         return new FieldSet(this);
     }
-
-    /**
-     * @param {Object} values       <fieldName : value> validation target Object.
-     */
-    validate(values) {}
 }
