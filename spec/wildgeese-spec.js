@@ -57,14 +57,21 @@ describe("Wildgeese Specs", () => {
         });
 
         it("Should passes user defined configure to validator", done => {
-            wildgeese.addRule({
-                name: "__config-test",
-                validate: (val, ctx) => {
-                    expect(ctx.options.lang).to.be.equal("ja");
-                    expect(ctx.options.lang).to.not.equal("en");
-                    // done();
+            wildgeese.addRule([
+                {
+                    name: "__config-test",
+                    validate: (val, ctx) => {
+                        expect(ctx.options.lang).to.be.equal("ja");
+                        expect(ctx.options.lang).to.not.equal("en");
+                        // done();
+                    }
+                }, {
+                    name : "required",
+                    validate : (val, ctx) => {
+                        return val == null || val == "" ? `${ctx.label} must be required.` : null;
+                    }
                 }
-            });
+            ]);
 
             wildgeese.is("config-test", ["__config-test"])
             .then(done)
