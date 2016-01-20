@@ -10,12 +10,21 @@ async function nextTick() {
  * @param {FieldSet} fieldSet
  * @param {Object} values
  * @param {Wildgeese} wildgeese
+ * @param {Boolean|Array<String>|String} presentOnly  when true only validate presented fields.
  * @return {Promise}        reject with error messages Object<fieldName: Array<String>>
  */
-export default async function validateFields(fieldSet, values, wildgeese) {
+export default async function validateFields(fieldSet, values, wildgeese, presentOnly = false) {
     const fields = fieldSet.fields();
-
     const errors = {};
+    var willValidateFields;
+
+    // decide validate fields
+    switch (true) {
+        case Array.isArray(presentOnly): willValidateFields = presentOnly; break;
+        case presentOnly === true: willValidateFields = Object.keys(values); break;
+        case typeof presentOnly === "string" : willValidateFields = [presentOnly]; break;
+        default: willValidateFields = Object.keys(fields);
+    }
 
     //
     // make getters
@@ -46,7 +55,7 @@ export default async function validateFields(fieldSet, values, wildgeese) {
     var hasFailed = false;
 
     try {
-        await Promise.all(Object.keys(fields).map(fieldName => {
+        await Promise.all(willValidateFields.map(fieldName => {
             return new Promise(async (resolve, reject) => {
                 await nextTick();
 
