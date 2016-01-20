@@ -64,9 +64,10 @@ export default class FieldSet {
     /**
      * @method validate
      * @param {Object} values                   values to validation <fieldName : value>
+     * @param {Booelan} presentOnly             validate only presented fields
      * @return {Promise} reject with error messages Object<fieldName: Array<String>>
      */
-    validate(values) {
-        return validate(this, values, this._wildgeese);
+    validate(values, presentOnly = false) {
+        return validate(this, values, this._wildgeese, presentOnly);
     }
 }

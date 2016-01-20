@@ -1,31 +1,24 @@
-const handleException = next => {
-    return e => {
-        console.log(e.stack);
-        next(e);
-    }
-};
-
 describe("Validate Specs", () => {
+    //
+    // Initialize wildgeese
+    //
+    const wildgeese = new Wildgeese();
+
+    // set rules
+    wildgeese.addRule([{
+        name : "--required",
+        validate : (val, ctx) => {
+            return val == null || val == "" ? `${ctx.label} must be required.` : null;
+        }
+    }, {
+        name : "--match-with",
+        validate : (val, ctx) => {
+            const target = ctx.args.target;
+            return !val || val !== ctx.values[target] ? `${ctx.label} and ${ctx.labels[target]} not matched.` : null;
+        }
+    }]);
+
     describe("#validateFields", () => {
-        //
-        // Initialize wildgeese
-        //
-        const wildgeese = new Wildgeese();
-
-        // set rules
-        wildgeese.addRule([{
-            name : "--required",
-            validate : (val, ctx) => {
-                return val == null || val == "" ? `${ctx.label} must be required.` : null;
-            }
-        }, {
-            name : "--match-with",
-            validate : (val, ctx) => {
-                const target = ctx.args.target;
-                return !val || val !== ctx.values[target] ? `${ctx.label} and ${ctx.labels[target]} not matched.` : null;
-            }
-        }]);
-
         // define fields
         const fieldSet = wildgeese.makeFieldSet();
         fieldSet.add("name", "Name", ["--required"]);
@@ -49,7 +42,7 @@ describe("Validate Specs", () => {
                     expect(errors).to.be.equal(undefined);
                     next();
                 })
-                .catch(handleException(next));
+                .catch(next);
         });
 
 
@@ -66,7 +59,7 @@ describe("Validate Specs", () => {
 
                 next();
             })
-            .catch(handleException(next));
+            .catch(next);
         });
 
 
@@ -109,7 +102,7 @@ describe("Validate Specs", () => {
                 password: "w11d g33s3",
                 password_confirm: "w11d g33s3"
             })
-            .catch(handleException(next));
+            .catch(next);
         });
 
 
@@ -125,6 +118,61 @@ describe("Validate Specs", () => {
                 expect(e.message).to.be.equal("Validation rule `un-registered-rule` is not registered in wildgeese.");
                 next();
             })
+        });
+
+
+        describe("Should validate present fields only", () => {
+            const _fieldSet = wildgeese.makeFieldSet();
+            _fieldSet.add("validate", "Validate", ["--required"]);
+            _fieldSet.add("ignored", "Ignored", ["--required"]);
+
+            it ("with boolean", (next) => {
+                Promise.all([
+                    // without error
+                    _fieldSet.validate({validate: "wildgeese"}, true).then(errors => {
+                        expect(errors).to.equal(undefined);
+                    }),
+
+                    // with error
+                    _fieldSet.validate({}, false).then(errors => {
+                        expect(errors).to.have.key("validate");
+                        expect(errors).to.have.key('ignored');
+                    }),
+                ])
+                .then(() => next(), next);
+            });
+
+            it("with presented field name string", next => {
+                Promise.all([
+                    // without error
+                    _fieldSet.validate({validate: "wildgeese"}, "validate").then(errors => {
+                        expect(errors).to.equal(undefined);
+                    }),
+
+                    // with error
+                    _fieldSet.validate({}, "validate").then(errors => {
+                        expect(errors).to.have.key("validate");
+                        expect(errors).to.not.have.key('ignored');
+                    })
+                ])
+                .then(() => next(), next);
+            });
+
+            it("with presented field names array", next => {
+                Promise.all([
+                    // without error
+                    _fieldSet.validate({validate: "wildgeese"}, ["validate"]).then(errors => {
+                        expect(errors).to.equal(undefined);
+                    }),
+
+                    // with error
+                    _fieldSet.validate({}, ["validate"]).then(errors => {
+                        expect(errors).to.have.key("validate");
+                        expect(errors).to.not.have.key('ignored');
+                    })
+                ])
+                .then(() => next(), next);
+            });
         });
     });
 });
