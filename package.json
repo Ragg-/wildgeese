@@ -18,7 +18,6 @@
   "license": "MIT",
   "dependencies": {
     "co": "^4.6.0",
-    "is-array": "^1.0.1",
     "lodash": "^4.0.0"
   },
   "devDependencies": {
