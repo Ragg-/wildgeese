@@ -107,7 +107,8 @@ export default async function validateFields(fieldSet, values, wildgeese, presen
  * @return {Promise}        reject with error messages Array<String>
  */
 export async function validateValue(value, rules, wildgeese, ctx = {}) {
-    var fields = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+    const requiredValidator = wildgeese.getRule("required");
+    const isOptional = rules.indexOf("required") === -1;
 
     // Normalize ctx
     ctx.labels = ctx.labels || {};
@@ -150,6 +151,10 @@ export async function validateValue(value, rules, wildgeese, ctx = {}) {
                     options: wildgeese.get(),
                     values: ctx.values,
                 };
+
+                // Ignore validation when optional field with empty value.
+                const isEmptyValue = !!(await requiredValidator(value, givenCtx))
+                if (isOptional && isEmptyValue) return resolve();
 
                 resolve(await validator(value, givenCtx));
             } catch (e) {
