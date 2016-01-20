@@ -64,33 +64,14 @@ describe("Validate Specs", () => {
 
 
         it("Should given valid context in 2nd argument", next => {
+            const spy = sinon.spy();
+
             // Set config
             wildgeese.set("context-test", {lang: "ja"});
 
             wildgeese.addRule({
                 name : "--test-context",
-                validate : (val, ctx) => {
-                    expect(ctx.label).to.be.equal("Spy");
-
-                    expect(ctx.labels).to.be.eql({
-                        name: "Name",
-                        password: "Password",
-                        password_confirm: "Confirm Password",
-                        spy: "Spy"
-                    });
-
-                    expect(ctx.options["context-test"]).to.be.eql({lang: "ja"});
-
-                    expect(ctx.values).to.be.eql({
-                        name: "wild geese",
-                        password: "w11d g33s3",
-                        password_confirm: "w11d g33s3",
-                        spy : undefined
-                    });
-
-                    expect(ctx.args).to.be.eql({with: "spy"});
-                    next();
-                }
+                validate : spy
             });
 
             // Add testing field
@@ -100,7 +81,33 @@ describe("Validate Specs", () => {
             _fieldSet.validate({
                 name : "wild geese",
                 password: "w11d g33s3",
-                password_confirm: "w11d g33s3"
+                password_confirm: "w11d g33s3",
+                spy : "spy",
+            })
+            .then(errors => {
+                const ctx = spy.args[0][1];
+
+                expect(errors).to.be(undefined);
+
+                expect(ctx.label).to.be("Spy");
+                expect(ctx.labels).to.be.eql({
+                    name: "Name",
+                    password: "Password",
+                    password_confirm: "Confirm Password",
+                    spy: "Spy"
+                });
+
+                expect(ctx.options["context-test"]).to.be.eql({lang: "ja"});
+
+                expect(ctx.values).to.be.eql({
+                    name: "wild geese",
+                    password: "w11d g33s3",
+                    password_confirm: "w11d g33s3",
+                    spy : "spy"
+                });
+
+                expect(ctx.args).to.be.eql({with: "spy"});
+                next();
             })
             .catch(next);
         });
