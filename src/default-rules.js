@@ -101,7 +101,7 @@ module.exports.push(
         name : "byteLength",
         validate : (val, ctx) => {
             if (! validator[method](val, ctx.args)) {
-                return ctx.__(ruleName, ctx.label);
+                return ctx.__("byteLength", ctx.label);
             }
         }
     },
@@ -111,11 +111,11 @@ module.exports.push(
             if (! validator.isLength(val, ctx.args.min, ctx.args.max)) {
                 if (ctx.args.max != null) {
                     return (ctx.args.min !== 0) ?
-                        ctx.__("length_with_max", ctx.label, ctx.args.min, ctx.args.max)
-                        : ctx.__("length_with_max_no_min");
+                        ctx.__("length_with_min_and_max", ctx.label, ctx.args.min, ctx.args.max)
+                        : ctx.__("length_with_only_max");
                 }
                 else {
-                    return ctx.__("length", ctx.label);
+                    return ctx.__("length_with_only_min", ctx.label);
                 }
             }
         }
